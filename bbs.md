@@ -1,8 +1,8 @@
-## 业务梗概
+# 业务梗概
 
 校园论坛功能，用于校园的发帖。
 
-## 数据库设计
+# 数据库设计
 
 ```sql
 #bbs帖子表
@@ -107,13 +107,13 @@ CREATE TABLE u_post_comment_like
 | `u_post_comment` | `u_post_comment`（自身） | `parent_id`  | 自关联（评论树） |
 | 所有表           | 用户表                   | `user_id`    | 多对一           |
 
-## 接口
+# 接口
 
 接口预览
 
 ![image-20250531130226922](https://11-1305448902.cos.ap-chengdu.myqcloud.com/img/202505311302074.png)
 
-### POST 创建帖子
+## POST 创建帖子
 
 POST /user/post/create
 
@@ -167,7 +167,7 @@ OTHER("other", "其他");
 }
 ```
 
-### POST 获取帖子详情
+## POST 获取帖子详情
 
 POST /user/post/get/{postId}
 
@@ -206,7 +206,7 @@ POST /user/post/get/{postId}
 }
 ```
 
-### DELETE 删除帖子
+## DELETE 删除帖子
 
 DELETE /user/post/delete/{id}
 
@@ -228,11 +228,11 @@ DELETE /user/post/delete/{id}
 }
 ```
 
-### PUT 编辑帖子
+## PUT 编辑帖子
 
 业务目前不允许编辑帖子。
 
-### POST 分页查看帖子
+## POST 分页查看帖子
 
 POST /user/post/list
 
@@ -313,7 +313,7 @@ POST /user/post/list
 }
 ```
 
-### POST 分页查看指定分类帖子
+## POST 分页查看指定分类帖子
 
 POST /user/post/listByCategory
 
@@ -413,7 +413,7 @@ POST /user/post/listByCategory
 }
 ```
 
-### POST 帖子点赞 传入post_id
+## POST 帖子点赞 传入post_id
 
 POST /user/post/like/{postId}
 
@@ -435,7 +435,7 @@ POST /user/post/like/{postId}
 }
 ```
 
-### GET 帖子搜索
+## GET 帖子搜索
 
 GET /user/post/search
 
@@ -478,7 +478,7 @@ GET /user/post/search
 }
 ```
 
-### POST 刷新帖子后返回新增的帖子数量
+## POST 刷新帖子后返回新增的帖子数量
 
 POST /user/post/countNewPosts
 
@@ -512,7 +512,7 @@ POST /user/post/countNewPosts
 }
 ```
 
-### POST 创建帖子评论
+## POST 创建帖子评论
 
 POST /user/post/common/create
 
@@ -538,7 +538,7 @@ POST /user/post/common/create
 
 
 
-### DELETE 删除帖子评论
+## DELETE 删除帖子评论
 
 DELETE /user/post/common/delete/{id}
 
@@ -548,7 +548,7 @@ DELETE /user/post/common/delete/{id}
 | ---- | ---- | ------- | ---- | ---- |
 | id   | path | integer | 是   | none |
 
-### POST 分页查看帖子评论
+## POST 分页查看帖子评论
 
 POST /user/post/common/page
 
@@ -605,7 +605,7 @@ POST /user/post/common/page
 }
 ```
 
-### POST 切换帖子评论的点赞状态
+## POST 切换帖子评论的点赞状态
 
 POST /user/post/common/like/{commentId}
 
@@ -614,3 +614,6 @@ POST /user/post/common/like/{commentId}
 | 名称      | 位置 | 类型    | 必选 | 说明 |
 | --------- | ---- | ------- | ---- | ---- |
 | commentId | path | integer | 是   | none |
+
+
+

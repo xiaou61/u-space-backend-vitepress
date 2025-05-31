@@ -27,7 +27,8 @@ export default defineConfig({
             {
                 text: '业务模块详接',
                 items: [
-                    {text: 'xiaou-bbs模块', link: '/bbs'}
+                    {text: 'xiaou-bbs模块', link: '/bbs'},
+                {text: 'xiaou-ai模块', link: '/ai'},
                 ]
             }
         ],
