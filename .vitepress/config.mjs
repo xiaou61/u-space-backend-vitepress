@@ -29,6 +29,7 @@ export default defineConfig({
                 items: [
                     {text: 'xiaou-bbs模块', link: '/bbs'},
                     {text: 'xiaou-ai模块', link: '/ai'},
+                    {text: 'xiaou-onlineexam模块', link: '/exam'},
                 ]
             }
         ],
