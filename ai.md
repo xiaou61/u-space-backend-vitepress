@@ -1,4 +1,4 @@
-# 业务梗概
+## 业务梗概
 
 基于spring-ai的对接deepseek对话
 
@@ -8,7 +8,7 @@
 
 有记忆的ai20次。
 
-# 接口
+## 接口
 
 ## GET 流式聊天API
 
@@ -24,7 +24,7 @@ GET /ai/deepseek/stream/chat
 
 > 返回示例
 
-![image-20250531150947320](https://11-1305448902.cos.ap-chengdu.myqcloud.com/img/202505311509541.png)
+![image-20250531150947320](https://11-1305448902.cos.ap-chengdu.myqcloud.com/img/202505311543875.png)
 
 ## GET 流式聊天API（JSON格式）
 
@@ -40,7 +40,7 @@ GET /ai/deepseek/stream/chat-json
 
 > 返回示例
 
-![image-20250531151137716](https://11-1305448902.cos.ap-chengdu.myqcloud.com/img/202505311511778.png)
+![image-20250531151137716](https://11-1305448902.cos.ap-chengdu.myqcloud.com/img/202505311543827.png)
 
 ## GET streamChatMemory 有历史对话
 
@@ -56,9 +56,9 @@ GET /ai/deepseek/stream/chat-memory
 
 > 200 Response
 
-![image-20250531151326092](https://11-1305448902.cos.ap-chengdu.myqcloud.com/img/202505311513139.png)
+![image-20250531151326092](https://11-1305448902.cos.ap-chengdu.myqcloud.com/img/202505311543887.png)
 
-# 技术详解
+## 技术详解
 
 采用了redis跟spring-ai的deepseek
 
@@ -108,7 +108,6 @@ spring:
                 .doOnError(error -> log.error("流式响应出错", error))
                 .onErrorReturn("[ERROR] 流式响应出现错误");
     }
-
 ```
 
 这里用到了[DONE]表示结束。
@@ -131,13 +130,12 @@ return chatModel.stream(new Prompt(prompt.getInstructions(), options))
     .map(response -> response.getResult().getOutput().getText());
 ```
 
-这个 `chatModel.stream(...)` 就是关键点 —— 它返回一个 **Flux<String>**，每个 `String` 是大模型逐步生成的一小段回复（chunk）。
+这个 `chatModel.stream(...)` 就是关键点 —— 它返回一个 **FluxString**，每个 `String` 是大模型逐步生成的一小段回复（chunk）。
 
 那么带有记忆的是如何实现的呢？
 
 ```java
-    //带有记忆的流式聊天
-    @GetMapping(value = "/chat-memory", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+@GetMapping(value = "/chat-memory", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> streamChatMemory(@RequestParam String message) {
         Long userId = LoginHelper.getCurrentAppUserId();
         return smartGeneratorService.streamChatWithMemory(userId.toString(), message)
@@ -148,16 +146,6 @@ return chatModel.stream(new Prompt(prompt.getInstructions(), options))
 我们用户了一个唯一标识，就是用户的id
 
 具体的service中。
-
-**关键技术点**
-
-| 功能           | 技术/方式                                     |
-| -------------- | --------------------------------------------- |
-| 上下文记忆存储 | 使用 Redis 列表（List）存储每个会话的聊天历史 |
-| 会话标识       | 用 `sessionId` 区分不同用户/会话              |
-| Prompt 拼接    | 把历史对话拼接成 prompt，一起发给大模型       |
-| 数据清理       | 控制最多记忆 `MAX_HISTORY` 条，超出会自动裁剪 |
-| 响应方式       | 流式 SSE（`Flux<String>`）                    |
 
 ### 1. 获取聊天历史
 
@@ -182,7 +170,6 @@ listOps.range(redisKey, 0, MAX_HISTORY - 1)
 ```java
 StringBuilder sb = new StringBuilder();
 sb.append("你是一位友好、有帮助的AI助手。\n");
-...
 for (String past : historyList) {
     sb.append("用户：").append(past).append("\n");
 }
@@ -210,5 +197,5 @@ responseFlux.concatWith(Mono.defer(() -> {
 
 redis的结构就是这样的。
 
-![image-20250531152109944](https://11-1305448902.cos.ap-chengdu.myqcloud.com/img/202505311521009.png)
+![image-20250531152109944](https://11-1305448902.cos.ap-chengdu.myqcloud.com/img/202505311543873.png)
 
